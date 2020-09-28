@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Interpay book</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+        }
+
+        .search {
+            grid-column: span 5;
+        }
+
+        .book {
+            border: 1px solid lightblue;
+            border-radius: 5px;
+            padding: 1em;
+        }
+
+        #author {
+            font-size: 17px;
+        }
+
+        button {
+            display: inline-block;
+            padding: 0.35em 1.2em;
+            border: 0.1em solid black;
+            margin: 0 0.3em 0.3em 0;
+            border-radius: 0.12em;
+            color: black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="container">
+    <div class="search">
+        <input type="text" placeholder="Author name" id="author">
+        <button type="button" id="search">Search</button>
+    </div>
+</div>
+
+<script>
+    const container = document.getElementById('container');
+    document.getElementById("search").addEventListener("click", function () {
+        const elements = document.getElementsByClassName("book");
+        while (elements.length > 0) elements[0].remove();
+
+        fetch('/search.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'author=' + document.getElementById('author').value
+        })
+            .then(response => response.json())
+            .then((data) => {
+                data.forEach((book, i) => {
+                    setTimeout(function () {
+                        const element = `<div class="book" id="book-" ${book.id} "><h4> ${book.name} </h4> <p> ${book.author} </p></div>`;
+                        container.insertAdjacentHTML('beforeend', element);
+                    }, i * 500);
+                });
+            });
+    });
+</script>
+</body>
+</html>
