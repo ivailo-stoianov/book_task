@@ -1,0 +1,1 @@
+Application for parsing XML files found inside directory and it's subdirectories containing book information and saving it into a PostgreSQL database. The information can be retrieved via a simple search by author name.
